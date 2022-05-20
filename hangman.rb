@@ -3,17 +3,23 @@ class Hangman
   attr_accessor :word, :guesses, :incorrect_guesses, :correct_guesses, :saved_game
 
   def initialize
-    @dictionary = File.readlines('google-10000-english-no-swears.txt').select do |word|
-      word.length.between?(5, 12)
-    end
-    @word = @dictionary.sample.chomp.downcase
+    @word = random_word
     @guesses = 10
     @incorrect_guesses = []
     @correct_guesses = []
     @saved_game = false
   end
 
+  def random_word
+    dictionary = File.readlines('google-10000-english-no-swears.txt').select do |word|
+      word.length > 5 && word.length < 12
+    end
+    dictionary.sample.chomp.downcase
+  end
+
   def play
+    puts 'Welcome to Hangman!'
+    puts 'Type save or load to load or save a game'
     until @guesses == 0 || @word == @correct_guesses.join
       display_board
       make_guess
@@ -38,6 +44,8 @@ class Hangman
       @correct_guesses << guess
     elsif guess == 'save'
       save_game
+    elsif guess == 'load'
+      load_game
     elsif guess == 'quit'
       exit
     else
@@ -50,12 +58,15 @@ class Hangman
     File.open('saved_game.yml', 'w') do |file|
       file.write(YAML.dump(self))
     end
+    @saved_game = 'saved_game.yml'
     puts 'Game saved!'
   end
 
   def load_game
+    File.open('saved_game.yml', 'r') do |file|
+      @saved_game = YAML.load(file)
+    end
     puts 'Game loaded!'
-    Hangman.new(YAML.load(@saved_game))
   end
 end
 game = Hangman.new

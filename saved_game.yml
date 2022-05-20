@@ -1,0 +1,11 @@
+--- !ruby/object:Hangman
+word: flush
+guesses: 6
+incorrect_guesses:
+- a
+- e
+- p
+- o
+correct_guesses:
+- l
+saved_game: false
