@@ -63,9 +63,12 @@ class Hangman
   end
 
   def load_game
-    File.open('saved_game.yml', 'r') do |file|
-      @saved_game = YAML.load(file)
-    end
+    yaml = YAML.load_file('saved_game.yml')
+    @word = yaml.word
+    @guesses = yaml.guesses
+    @incorrect_guesses = yaml.incorrect_guesses
+    @correct_guesses = yaml.correct_guesses
+    @saved_game = 'saved_game.yml'
     puts 'Game loaded!'
   end
 end
